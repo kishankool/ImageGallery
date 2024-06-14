@@ -22,10 +22,10 @@
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA"
       ],
-      "package": "com.kishankool.ImageGallery"
+      "package": "com.kishankool.ImageGallery",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "@react-native-firebase/app",
