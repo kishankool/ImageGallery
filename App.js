@@ -1,20 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import AppNavigator from "./src/navigation/AppNavigator";
+import SplashScreen from './src/screens/SplashScreen';
+import auth from "@react-native-firebase/auth";
 
-export default function App() {
+function App() {
+  const [nav, setNav] = useState(false);
+
+  useEffect(() => {
+    // Perform initial tasks here
+    // For example, check user authentication
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      setTimeout(() => {
+        setNav(true);
+      }, 3000);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    nav ? <AppNavigator /> : <SplashScreen />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
