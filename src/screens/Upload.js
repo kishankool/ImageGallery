@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, TouchableOpacity ,Text} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import CameraView from "../components/CameraView";
+import CameraViewComponent from "../components/CameraView";
 import Button from "../components/Button";
 import ImageViewer from "../components/ImageViewer";
 
@@ -34,7 +34,7 @@ export default function Upload() {
   };
 
   return useCamera ? (
-    <CameraView />
+    <CameraViewComponent />
   ) : (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
