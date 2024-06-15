@@ -1,28 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Constants from 'expo-constants';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera, CameraType, FlashMode } from 'expo-camera/legacy';
 import * as MediaLibrary from 'expo-media-library';
-import { MaterialIcons } from '@expo/vector-icons';
 import CameraButton from './CameraButton';
 
 export default function CameraViewComponent() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
+  const [type, setType] = useState(CameraType.back);
+  const [flash, setFlash] = useState(FlashMode.off);
   const cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
-      MediaLibrary.requestPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === 'granted');
     })();
   }, []);
 
   const takePicture = async () => {
-    if (cameraRef) {
+    if (cameraRef.current) {
       try {
         const data = await cameraRef.current.takePictureAsync();
         console.log(data);
@@ -36,7 +35,7 @@ export default function CameraViewComponent() {
   const savePicture = async () => {
     if (image) {
       try {
-        const asset = await MediaLibrary.createAssetAsync(image);
+        await MediaLibrary.createAssetAsync(image);
         alert('Picture saved! 🎉');
         setImage(null);
         console.log('saved successfully');
@@ -64,6 +63,7 @@ export default function CameraViewComponent() {
               flexDirection: 'row',
               justifyContent: 'space-between',
               paddingHorizontal: 30,
+              marginTop: 10,
             }}
           >
             <CameraButton
@@ -78,13 +78,11 @@ export default function CameraViewComponent() {
             <CameraButton
               onPress={() =>
                 setFlash(
-                  flash === Camera.Constants.FlashMode.off
-                    ? Camera.Constants.FlashMode.on
-                    : Camera.Constants.FlashMode.off
+                  flash === FlashMode.off ? FlashMode.on : FlashMode.off
                 )
               }
               icon="flash"
-              color={flash === Camera.Constants.FlashMode.off ? 'gray' : '#fff'}
+              color={flash === FlashMode.off ? 'gray' : '#fff'}
             />
           </View>
         </Camera>
@@ -109,7 +107,11 @@ export default function CameraViewComponent() {
             <CameraButton title="Save" onPress={savePicture} icon="check" />
           </View>
         ) : (
-          <CameraButton title="Take a picture" onPress={takePicture} icon="camera" />
+          <CameraButton
+            title="Take a picture"
+            onPress={takePicture}
+            icon="camera"
+          />
         )}
       </View>
     </View>
